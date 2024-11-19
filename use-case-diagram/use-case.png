@@ -1,0 +1,69 @@
+flowchart TD
+    %% External Entities
+    User(["User\n(Guest/Host)"])
+    Admin(["Admin"])
+    Payment(["Payment Gateway"])
+    Storage(["Cloud Storage"])
+    Email(["Email Service"])
+
+    %% Processes
+    P1[["1.0 User Management"]]
+    P2[["2.0 Property Management"]]
+    P3[["3.0 Search & Filter"]]
+    P4[["4.0 Booking Management"]]
+    P5[["5.0 Payment Processing"]]
+    P6[["6.0 Review System"]]
+    P7[["7.0 Notification Handler"]]
+    P8[["8.0 Admin Dashboard"]]
+
+    %% Data Stores
+    DB1[(Users DB)]
+    DB2[(Properties DB)]
+    DB3[(Bookings DB)]
+    DB4[(Reviews DB)]
+    DB5[(Payments DB)]
+    Cache[(Cache DB)]
+
+    %% User Management Flows
+    User -->|Login/Register| P1
+    P1 -->|Store| DB1
+    P1 -->|Token| User
+
+    %% Property Management Flows
+    User -->|Create Listing| P2
+    P2 -->|Store| DB2
+    P2 -->|Images| Storage
+
+    %% Search Flows
+    User -->|Search| P3
+    P3 -->|Cache| Cache
+    DB2 -->|Data| P3
+    P3 -->|Results| User
+
+    %% Booking Flows
+    User -->|Book| P4
+    P4 -->|Store| DB3
+    P4 -->|Payment| P5
+    P4 -->|Notify| P7
+
+    %% Payment Flows
+    P5 -->|Process| Payment
+    Payment -->|Confirm| P5
+    P5 -->|Store| DB5
+
+    %% Review Flows
+    User -->|Review| P6
+    P6 -->|Store| DB4
+    P6 -->|Show| User
+
+    %% Notification Flows
+    P7 -->|Send| Email
+    P7 -->|Notify| User
+
+    %% Admin Flows
+    Admin -->|Manage| P8
+    P8 -->|Query| DB1
+    P8 -->|Query| DB2
+    P8 -->|Query| DB3
+    P8 -->|Query| DB4
+    P8 -->|Query| DB5

@@ -1,0 +1,66 @@
+graph TD
+    %% External Entities
+    U[User] 
+    A[Admin]
+    P[Payment Gateway]
+    S[Cloud Storage]
+    E[Email Service]
+
+    %% Processes
+    P1((User Mgmt))
+    P2((Property Mgmt))
+    P3((Search))
+    P4((Booking))
+    P5((Payment))
+    P6((Reviews))
+    P7((Notifications))
+    P8((Admin Panel))
+
+    %% Data Stores
+    D1[(Users DB)]
+    D2[(Properties DB)]
+    D3[(Bookings DB)]
+    D4[(Reviews DB)]
+    D5[(Payments DB)]
+    D6[(Cache)]
+
+    %% User & Auth Flows
+    U --> P1
+    P1 --> D1
+    P1 --> U
+
+    %% Property Flows
+    U --> P2
+    P2 --> D2
+    P2 --> S
+
+    %% Search Flows
+    U --> P3
+    P3 --> D6
+    D2 --> P3
+    P3 --> U
+
+    %% Booking & Payment
+    U --> P4
+    P4 --> D3
+    P4 --> P5
+    P5 --> P
+    P5 --> D5
+
+    %% Reviews
+    U --> P6
+    P6 --> D4
+    D4 --> P6
+
+    %% Notifications
+    P7 --> E
+    P7 --> U
+
+    %% Admin
+    A --> P8
+    P8 --> D1
+    P8 --> D2
+    P8 --> D3
+    P8 --> D4
+    P8 --> D5
+
